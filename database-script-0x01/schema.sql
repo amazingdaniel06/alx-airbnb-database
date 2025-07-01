@@ -1,75 +1,84 @@
 USER TABLE;
-CREATE TABLE User (
-  user_id UUID PRIMARY KEY,
-  first_name VARCHAR(50) NOT NULL,
-  last_name VARCHAR(50) NOT NULL,
-  email VARCHAR(100) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  phone_number VARCHAR(20),
-  role ENUM('guest', 'host', 'admin') NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX (email)
-);
+CREATE TABLE `user` (
+  `user_id` int NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `phone_number` varchar(20) NOT NULL,
+  `role` enum(' guest',' host',' admin') NOT NULL,
+  `created_at` timestamp(6) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 PROPERTY TABLE;
-CREATE TABLE Property (
-  property_id UUID PRIMARY KEY,
-  host_id UUID NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  description TEXT NOT NULL,
-  location VARCHAR(255) NOT NULL,
-  pricepernight DECIMAL(10, 2) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (host_id) REFERENCES User(user_id) ON DELETE CASCADE,
-  INDEX (property_id)
-);
+CREATE TABLE `property` (
+  `property_id` int NOT NULL,
+  `host_id` int NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(45) NOT NULL,
+  `location` varchar(225) NOT NULL,
+  `pricepernight` decimal(10,2) NOT NULL,
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  `updated_at` timestamp(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`property_id`),
+  KEY `host_id_idx` (`host_id`),
+  CONSTRAINT `host_id` FOREIGN KEY (`host_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 BOOKING TABLE;
-CREATE TABLE Booking (
-  booking_id UUID PRIMARY KEY,
-  property_id UUID NOT NULL,
-  user_id UUID NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  total_price DECIMAL(10, 2) NOT NULL,
-  status ENUM('pending', 'confirmed', 'canceled') NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (property_id) REFERENCES Property(property_id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-  INDEX (property_id),
-  INDEX (booking_id)
+CREATE TABLE `booking` (
+  `booking_id` int NOT NULL,
+  `property_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `status` enum(' pending',' confirmed',' canceled') NOT NULL,
+  `created_at` timestamp(6) NOT NULL,
+  PRIMARY KEY (`booking_id`),
+  KEY `property_id_idx` (`property_id`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `property_id` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 );
 PAYMENT TABLE;
-CREATE TABLE Payment (
-  payment_id UUID PRIMARY KEY,
-  booking_id UUID NOT NULL,
-  amount DECIMAL(10, 2) NOT NULL,
-  payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  payment_method ENUM('credit_card', 'paypal', 'stripe') NOT NULL,
-  FOREIGN KEY (booking_id) REFERENCES Booking(booking_id) ON DELETE CASCADE,
-  INDEX (booking_id)
-);
+CREATE TABLE `payment` (
+  `payment_id` int NOT NULL,
+  `booking_id` int NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` enum(' credit_card',' paypal',' mobile_money') NOT NULL,
+  PRIMARY KEY (`payment_id`),
+  KEY `booking_id_idx` (`booking_id`),
+  CONSTRAINT `booking_id` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 REVIEW TABLE;
-CREATE TABLE Review (
-  review_id UUID PRIMARY KEY,
-  property_id UUID NOT NULL,
-  user_id UUID NOT NULL,
-  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-  comment TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (property_id) REFERENCES Property(property_id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
-);
+CREATE TABLE `review` (
+  `review_id` int NOT NULL,
+  `property_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `rating` int NOT NULL,
+  `comment` text NOT NULL,
+  `created_at` timestamp(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`review_id`),
+  KEY `property_id_idx` (`property_id`),
+  KEY `user_idx` (`user_id`),
+  CONSTRAINT `` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
+  CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 MASSAGE TABLE
-CREATE TABLE Message (
-  message_id UUID PRIMARY KEY,
-  sender_id UUID NOT NULL,
-  recipient_id UUID NOT NULL,
-  message_body TEXT NOT NULL,
-  sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (sender_id) REFERENCES User(user_id) ON DELETE CASCADE,
-  FOREIGN KEY (recipient_id) REFERENCES User(user_id) ON DELETE CASCADE
-);
-
+CREATE TABLE `message` (
+  `messaged_id` int NOT NULL,
+  `send_id` int NOT NULL,
+  `receipent_id` int NOT NULL,
+  `message_body` text NOT NULL,
+  `sent_at` timestamp(6) NOT NULL,
+  PRIMARY KEY (`messaged_id`),
+  KEY `sender_id_idx` (`send_id`),
+  KEY `recipient_id_idx` (`receipent_id`),
+  CONSTRAINT `recipient_id` FOREIGN KEY (`receipent_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `sender_id` FOREIGN KEY (`send_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 SAMPLE USER DATA;

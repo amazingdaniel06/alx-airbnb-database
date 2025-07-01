@@ -68,44 +68,50 @@ CREATE TABLE `review` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 MASSAGE TABLE
 CREATE TABLE `message` (
-  `messaged_id` int NOT NULL,
-  `send_id` int NOT NULL,
-  `receipent_id` int NOT NULL,
+  `message_id` int NOT NULL,
+  `sender_id` int NOT NULL,
+  `receiver_id` int NOT NULL,
   `message_body` text NOT NULL,
   `sent_at` timestamp(6) NOT NULL,
-  PRIMARY KEY (`messaged_id`),
-  KEY `sender_id_idx` (`send_id`),
-  KEY `recipient_id_idx` (`receipent_id`),
-  CONSTRAINT `recipient_id` FOREIGN KEY (`receipent_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
-  CONSTRAINT `sender_id` FOREIGN KEY (`send_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+  PRIMARY KEY (`message_id`),
+  KEY `sender_id_idx` (`sender_id`),
+  KEY `recipient_id_idx` (`receiver_id`),
+  CONSTRAINT `receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 
 SAMPLE USER DATA;
-INSERT INTO User (user_id, first_name, last_name, email, password_hash, phone_number, role)
-VALUES
-  ('uuid-1111', 'John', 'Doe', 'john@example.com', 'hashedpass123', '1234567890', 'guest'),
-  ('uuid-2222', 'Alice', 'Smith', 'alice@example.com', 'hashedpass456', '0987654321', 'host'),
-  ('uuid-3333', 'Admin', 'User', 'admin@example.com', 'hashedpass789', NULL, 'admin');
+INSERT INTO user 
+(user_id, first_name, last_name, email, password_hash, phone_number, role, created_at) 
+VALUES 
+(1, 'Daniel', 'Arku', 'daniel@example.com', 'passwordhash', '1234567890', ' guest ', NOW());
+
 SAMPLE PROPERTY DATA;
-INSERT INTO Property (property_id, host_id, name, description, location, pricepernight)
-VALUES
-  ('prop-1111', 'uuid-2222', 'Cozy Studio', 'A lovely small studio apartment.', 'New York', 100.00),
-  ('prop-2222', 'uuid-2222', 'Beach House', 'Oceanfront property with 3 bedrooms.', 'Miami', 300.00);
+INSERT INTO Property 
+(property_id, host_id, name, description, location, pricepernight, created_at, updated_at) 
+VALUES 
+(001, 1, 'ADairbnb', 'Beach sideview', 'LA', 2000.00, NOW(), NOW());
+
 SAMPLE BOOKING DATA;
-INSERT INTO Booking (booking_id, property_id, user_id, start_date, end_date, total_price, status)
+INSERT INTO Booking (booking_id, property_id, user_id, start_date, end_date, total_price, status, created_at)
 VALUES
-  ('book-1111', 'prop-1111', 'uuid-1111', '2025-07-01', '2025-07-05', 400.00, 'confirmed'),
-  ('book-2222', 'prop-2222', 'uuid-1111', '2025-08-10', '2025-08-15', 1500.00, 'pending');
+  (INSERT INTO Booking
+(booking_id, property_id, user_id, start_date, end_date, total_price, status_at, created_at)
+VALUES
+(1, 1, 1, '2025-07-01', '2025-07-05', 10000.00, '  pending', NOW());
+
 SAMPLE PAYMENT DATA;
 INSERT INTO Payment (payment_id, booking_id, amount, payment_method)
 VALUES
-  ('pay-1111', 'book-1111', 400.00, 'credit_card');
+  (1, 1, 10000.00, ' credit_card');
+
 SAMPLE REVIEW DATA;
-INSERT INTO Review (review_id, property_id, user_id, rating, comment)
+INSERT INTO Review (review_id, property_id, user_id, rating, comment, created_at)
 VALUES
-  ('rev-1111', 'prop-1111', 'uuid-1111', 5, 'Wonderful stay, will come back!');
+  (0001, 1, 1, 5, 'Wonderful stay, will come back!', NOW());
+
 SAMPLE MESSAGE DATA;
-INSERT INTO Message (message_id, sender_id, recipient_id, message_body)
+INSERT INTO Message (message_id, sender_id, receiver_id, message_body, sent_at)
 VALUES
-  ('msg-1111', 'uuid-1111', 'uuid-2222', 'Hello, I have a question about my booking.');
+  (1, 1, 001, 'Hello, I have a question about my booking.', NOW());

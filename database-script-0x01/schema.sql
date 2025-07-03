@@ -11,6 +11,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  
 PROPERTY TABLE;
 CREATE TABLE `property` (
   `property_id` int NOT NULL,
@@ -23,8 +24,9 @@ CREATE TABLE `property` (
   `updated_at` timestamp(6) NULL DEFAULT NULL,
   PRIMARY KEY (`property_id`),
   KEY `host_id_idx` (`host_id`),
-  CONSTRAINT `host_id` FOREIGN KEY (`host_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `ht` FOREIGN KEY (`host_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  
 BOOKING TABLE;
 CREATE TABLE `booking` (
   `booking_id` int NOT NULL,
@@ -33,15 +35,15 @@ CREATE TABLE `booking` (
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `status` enum(' pending',' confirmed',' canceled') NOT NULL,
+  `status_at` enum(' pending',' confirmed',' canceled') NOT NULL,
   `created_at` timestamp(6) NOT NULL,
   PRIMARY KEY (`booking_id`),
   KEY `property_id_idx` (`property_id`),
   KEY `user_id_idx` (`user_id`),
-  CONSTRAINT `property_id` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
+  CONSTRAINT `pt` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
   CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-);
+
 PAYMENT TABLE;
 CREATE TABLE `payment` (
   `payment_id` int NOT NULL,
@@ -52,6 +54,7 @@ CREATE TABLE `payment` (
   KEY `booking_id_idx` (`booking_id`),
   CONSTRAINT `booking_id` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  
 REVIEW TABLE;
 CREATE TABLE `review` (
   `review_id` int NOT NULL,
@@ -66,6 +69,7 @@ CREATE TABLE `review` (
   CONSTRAINT `` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
   CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  
 MASSAGE TABLE
 CREATE TABLE `message` (
   `message_id` int NOT NULL,
@@ -91,21 +95,18 @@ SAMPLE PROPERTY DATA;
 INSERT INTO Property 
 (property_id, host_id, name, description, location, pricepernight, created_at, updated_at) 
 VALUES 
-(001, 1, 'ADairbnb', 'Beach sideview', 'LA', 2000.00, NOW(), NOW());
+(1, 1, 'ADairbnb', 'Beach sideview', 'LA', 2000.00, NOW(), NOW());
 
 SAMPLE BOOKING DATA;
-INSERT INTO Booking (booking_id, property_id, user_id, start_date, end_date, total_price, status, created_at)
+INSERT INTO Booking (booking_id, property_id, user_id, start_date, end_date, total_price, status_at, created_at)
 VALUES
-  (INSERT INTO Booking
-(booking_id, property_id, user_id, start_date, end_date, total_price, status_at, created_at)
-VALUES
-(1, 1, 1, '2025-07-01', '2025-07-05', 10000.00, '  pending', NOW());
+(1, 1, 1, '2025-07-01', '2025-07-05', 10000.00, ' pending', NOW());
 
 SAMPLE PAYMENT DATA;
-INSERT INTO Payment (payment_id, booking_id, amount, payment_method)
+INSERT INTO payment (payment_id, booking_id, amount, payment_method)
 VALUES
-  (1, 1, 10000.00, ' credit_card');
-
+(1, 1, 10000.00, ' credit_card' )
+  
 SAMPLE REVIEW DATA;
 INSERT INTO Review (review_id, property_id, user_id, rating, comment, created_at)
 VALUES

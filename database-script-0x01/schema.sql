@@ -41,7 +41,7 @@ CREATE TABLE `booking` (
   KEY `property_id_idx` (`property_id`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `pt` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `ur` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 PAYMENT TABLE;
@@ -52,7 +52,7 @@ CREATE TABLE `payment` (
   `payment_method` enum(' credit_card',' paypal',' mobile_money') NOT NULL,
   PRIMARY KEY (`payment_id`),
   KEY `booking_id_idx` (`booking_id`),
-  CONSTRAINT `booking_id` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`) ON DELETE CASCADE
+  CONSTRAINT `bk` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
   
 REVIEW TABLE;
@@ -66,8 +66,8 @@ CREATE TABLE `review` (
   PRIMARY KEY (`review_id`),
   KEY `property_id_idx` (`property_id`),
   KEY `user_idx` (`user_id`),
-  CONSTRAINT `` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
-  CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `pt_id` FOREIGN KEY (`property_id`) REFERENCES `property` (`property_id`) ON DELETE CASCADE,
+  CONSTRAINT `ur_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
   
 MASSAGE TABLE
@@ -80,8 +80,8 @@ CREATE TABLE `message` (
   PRIMARY KEY (`message_id`),
   KEY `sender_id_idx` (`sender_id`),
   KEY `recipient_id_idx` (`receiver_id`),
-  CONSTRAINT `receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
-  CONSTRAINT `sender_id` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
+  CONSTRAINT `rr` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `sr` FOREIGN KEY (`sender_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 

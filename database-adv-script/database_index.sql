@@ -11,7 +11,9 @@ CREATE INDEX idx_booking_start_date ON booking(start_date);
 -- property table
 CREATE INDEX idx_property_property_id ON property(property_id);
 
-EXPLIAN ANALYZE SELECT
+
+EXPLAIN ANALYZE
+SELECT
     pb.property_id,
     property.name AS property_name,
     pb.total_bookings,
@@ -29,3 +31,18 @@ FROM (
 JOIN property
   ON pb.property_id = property.property_id;
 
+-- you could measure other queries too:
+EXPLAIN ANALYZE
+SELECT 
+    user.user_id,
+    user.first_name,
+    user.email,
+    COUNT(booking.booking_id) AS total_bookings
+FROM 
+    user
+LEFT JOIN 
+    booking
+ON 
+    user.user_id = booking.user_id
+GROUP BY 
+    user.user_id, user.first_name, user.email;

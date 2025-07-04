@@ -11,6 +11,7 @@ CREATE INDEX idx_booking_start_date ON booking(start_date);
 -- property table
 CREATE INDEX idx_property_property_id ON property(property_id);
 
+EXPLIAN ANALYZE
 EXPLAIN SELECT
     pb.property_id,
     property.name AS property_name,

@@ -1,20 +1,14 @@
+EXPLAIN ANALYZE
 SELECT
     booking.booking_id,
     booking.start_date,
     booking.end_date,
-    
-    user.user_id,
     user.first_name,
     user.email,
-    
-    property.property_id,
     property.name AS property_name,
-    
-    payment.payment_id,
     payment.amount,
-    payment.payment_method,
-    payment.booking_id
-    
+    payment.payment_date,
+    payment.status
 FROM
     booking
 INNER JOIN user
@@ -22,5 +16,8 @@ INNER JOIN user
 INNER JOIN property
     ON booking.property_id = property.property_id
 LEFT JOIN payment
-    ON booking.booking_id = payment.booking_id;
-
+    ON booking.booking_id = payment.booking_id
+WHERE
+    booking.start_date >= '2024-01-01'
+    AND booking.status = 'confirmed'
+LIMIT 100;

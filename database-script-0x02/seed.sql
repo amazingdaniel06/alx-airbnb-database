@@ -3,8 +3,12 @@ INSERT INTO user
 (user_id, first_name, last_name, email, password_hash, phone_number, role, created_at) 
 VALUES 
 (1, 'Daniel', 'Arku', 'daniel@example.com', 'passwordhash', '1234567890', ' guest ', NOW());
-
+INSERT INTO user 
+(user_id, first_name, last_name, email, password_hash, phone_number, role, created_at) 
+VALUES 
+(2, 'Stefan', 'Atta', 'stefan@example.com', 'passhash', '0987654321', ' host ', NOW());
 SAMPLE PROPERTY DATA;
+
 INSERT INTO Property 
 (property_id, host_id, name, description, location, pricepernight, created_at, updated_at) 
 VALUES 

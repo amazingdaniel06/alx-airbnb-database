@@ -14,7 +14,7 @@ ON
 
 SELECT 
     property.property_id,
-    property.name AS property_name,
+    property.name,
     review.review_id,
     review.rating,
     review.user_id
